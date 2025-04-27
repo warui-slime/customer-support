@@ -27,6 +27,7 @@ import {
 } from "lucide-react"
 import { useDropzone } from "@/components/setup/use-dropzone"
 import { ChatWidget } from "@/components/setup/chat-widget"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 const STEPS = [
   { id: "profile", title: "Business Profile", icon: Building },
@@ -143,21 +144,19 @@ export default function SetupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100">
+    <div className="min-h-screen ">
       <header className="container mx-auto py-6 px-4 flex justify-between items-center border-b border-gray-800">
-        <div className="font-bold text-2xl text-white">SupportAI</div>
-        <Button variant="ghost" className="text-gray-400 hover:text-white">
-          Skip Setup
-        </Button>
+        <div className="font-bold text-2xl bg-background">SupportAI</div>
+        <ThemeToggle/>
       </header>
       
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-white mb-2">Setup Wizard</h1>
+            <h1 className="text-3xl font-bold bg-background mb-2">Setup Wizard</h1>
             <p className="text-gray-400">Complete these steps to set up your automated customer support</p>
             
-            <Progress value={progress} className="mt-6 h-2 bg-gray-800" />
+            <Progress value={progress} className="mt-6 h-2 " />
             
             <div className="hidden md:flex justify-between mt-4">
               {STEPS.map((step, index) => (
@@ -176,7 +175,7 @@ export default function SetupPage() {
                       ? "bg-purple-600/20 text-purple-400 border border-purple-500" 
                       : index < currentStep 
                         ? "bg-green-600/20 text-green-500 border border-green-500" 
-                        : "bg-gray-800 text-gray-500 border border-gray-700"
+                        : " text-gray-500 border border-gray-700"
                   }`}>
                     {index < currentStep ? <Check size={16} /> : index + 1}
                   </div>
@@ -186,14 +185,14 @@ export default function SetupPage() {
             </div>
           </div>
           
-          <Card className="bg-gray-900 border-gray-800 shadow-lg">
+          <Card className="bg-background border-gray-800 shadow-lg">
             <CardContent className="p-6">
               {/* Step 1: Business Profile */}
               {currentStep === 0 && (
                 <div className="space-y-6">
                   <div className="flex items-center gap-3 mb-6">
                     <Building className="h-6 w-6 text-purple-400" />
-                    <h2 className="text-xl font-semibold text-white">Business Profile</h2>
+                    <h2 className="text-xl font-semibold bg-background">Business Profile</h2>
                   </div>
                   
                   <div className="space-y-4">
@@ -204,14 +203,14 @@ export default function SetupPage() {
                         placeholder="Acme Inc." 
                         value={businessName}
                         onChange={(e) => setBusinessName(e.target.value)}
-                        className="bg-gray-800 border-gray-700"
+                        className=" border-gray-700"
                       />
                     </div>
                     
                     <div className="space-y-2">
                       <Label htmlFor="industry">Industry</Label>
                       <Select value={industry} onValueChange={setIndustry}>
-                        <SelectTrigger className="bg-gray-800 border-gray-700">
+                        <SelectTrigger className=" border-gray-700">
                           <SelectValue placeholder="Select industry" />
                         </SelectTrigger>
                         <SelectContent>
@@ -229,7 +228,7 @@ export default function SetupPage() {
                     <div className="space-y-2">
                       <Label htmlFor="timezone">Timezone</Label>
                       <Select value={timezone} onValueChange={setTimezone}>
-                        <SelectTrigger className="bg-gray-800 border-gray-700">
+                        <SelectTrigger className=" border-gray-700">
                           <SelectValue placeholder="Select timezone" />
                         </SelectTrigger>
                         <SelectContent>
@@ -250,7 +249,7 @@ export default function SetupPage() {
                 <div className="space-y-6">
                   <div className="flex items-center gap-3 mb-6">
                     <Upload className="h-6 w-6 text-purple-400" />
-                    <h2 className="text-xl font-semibold text-white">Data Upload</h2>
+                    <h2 className="text-xl font-semibold bg-background">Data Upload</h2>
                   </div>
                   
                   <p className="text-gray-400 mb-4">
@@ -262,7 +261,7 @@ export default function SetupPage() {
                     className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
                       isDragActive 
                         ? "border-purple-500 bg-purple-500/10" 
-                        : "border-gray-700 bg-gray-800/50 hover:bg-gray-800"
+                        : "border-gray-700 /50 hover:"
                     }`}
                   >
                     <input {...getInputProps()} />
@@ -275,10 +274,10 @@ export default function SetupPage() {
                   
                   {uploadedFiles.length > 0 && (
                     <div className="mt-6">
-                      <h3 className="text-white font-medium mb-3">Uploaded Files ({uploadedFiles.length})</h3>
+                      <h3 className="bg-background font-medium mb-3">Uploaded Files ({uploadedFiles.length})</h3>
                       <div className="space-y-2">
                         {uploadedFiles.map((file, index) => (
-                          <div key={index} className="flex items-center justify-between bg-gray-800 p-3 rounded-md">
+                          <div key={index} className="flex items-center justify-between  p-3 rounded-md">
                             <div className="flex items-center">
                               <FileText className="h-5 w-5 text-gray-400 mr-3" />
                               <div>
@@ -290,7 +289,7 @@ export default function SetupPage() {
                               variant="ghost" 
                               size="sm" 
                               onClick={() => handleRemoveFile(index)}
-                              className="text-gray-400 hover:text-white"
+                              className="text-gray-400 hover:bg-background"
                             >
                               <X className="h-4 w-4" />
                             </Button>
@@ -307,7 +306,7 @@ export default function SetupPage() {
                 <div className="space-y-6">
                   <div className="flex items-center gap-3 mb-6">
                     <FileText className="h-6 w-6 text-purple-400" />
-                    <h2 className="text-xl font-semibold text-white">Template Selection</h2>
+                    <h2 className="text-xl font-semibold bg-background">Template Selection</h2>
                   </div>
                   
                   <p className="text-gray-400 mb-4">
@@ -334,14 +333,14 @@ export default function SetupPage() {
                           className={`flex flex-col h-full p-4 rounded-lg border-2 cursor-pointer transition-all ${
                             selectedTemplate === template.id
                               ? "border-purple-500 bg-purple-500/10"
-                              : "border-gray-700 bg-gray-800 hover:bg-gray-750"
+                              : "border-gray-700  hover:bg-gray-750"
                           }`}
                         >
-                          <span className="font-medium text-white mb-1">{template.name}</span>
+                          <span className="font-medium bg-background mb-1">{template.name}</span>
                           <span className="text-sm text-gray-400">{template.description}</span>
                           {selectedTemplate === template.id && (
                             <div className="absolute top-3 right-3 h-5 w-5 bg-purple-500 rounded-full flex items-center justify-center">
-                              <Check className="h-3 w-3 text-white" />
+                              <Check className="h-3 w-3 bg-background" />
                             </div>
                           )}
                         </Label>
@@ -356,7 +355,7 @@ export default function SetupPage() {
                 <div className="space-y-6">
                   <div className="flex items-center gap-3 mb-6">
                     <Palette className="h-6 w-6 text-purple-400" />
-                    <h2 className="text-xl font-semibold text-white">Chat Widget Customization</h2>
+                    <h2 className="text-xl font-semibold bg-background">Chat Widget Customization</h2>
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -369,13 +368,13 @@ export default function SetupPage() {
                             type="color" 
                             value={widgetColor}
                             onChange={(e) => setWidgetColor(e.target.value)}
-                            className="w-12 h-10 p-1 bg-gray-800 border-gray-700"
+                            className="w-12 h-10 p-1  border-gray-700"
                           />
                           <Input 
                             type="text" 
                             value={widgetColor}
                             onChange={(e) => setWidgetColor(e.target.value)}
-                            className="bg-gray-800 border-gray-700"
+                            className=" border-gray-700"
                           />
                         </div>
                       </div>
@@ -387,7 +386,7 @@ export default function SetupPage() {
                           placeholder="Hi! How can I help you today?" 
                           value={widgetGreeting}
                           onChange={(e) => setWidgetGreeting(e.target.value)}
-                          className="bg-gray-800 border-gray-700 min-h-[100px]"
+                          className=" border-gray-700 min-h-[100px]"
                         />
                       </div>
                       
@@ -401,7 +400,7 @@ export default function SetupPage() {
                               className={`flex items-center justify-center p-3 rounded-md border cursor-pointer transition-all ${
                                 widgetPlacement === "bottom-right"
                                   ? "border-purple-500 bg-purple-500/10"
-                                  : "border-gray-700 bg-gray-800"
+                                  : "border-gray-700 "
                               }`}
                             >
                               Bottom Right
@@ -414,7 +413,7 @@ export default function SetupPage() {
                               className={`flex items-center justify-center p-3 rounded-md border cursor-pointer transition-all ${
                                 widgetPlacement === "bottom-left"
                                   ? "border-purple-500 bg-purple-500/10"
-                                  : "border-gray-700 bg-gray-800"
+                                  : "border-gray-700 "
                               }`}
                             >
                               Bottom Left
@@ -433,9 +432,9 @@ export default function SetupPage() {
                       </div>
                     </div>
                     
-                    <div className="bg-gray-800 rounded-lg p-4 relative h-[400px] overflow-hidden">
+                    <div className=" rounded-lg p-4 relative h-[400px] overflow-hidden outline">
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-full max-w-[320px] h-full max-h-[500px] flex flex-col">
+                        <div className="w-full max-w-[320px] h-full max-h-[500px] flex flex-col p-3">
                           <ChatWidget 
                             color={widgetColor}
                             greeting={widgetGreeting}
@@ -454,7 +453,7 @@ export default function SetupPage() {
                 <div className="space-y-6">
                   <div className="flex items-center gap-3 mb-6">
                     <MessageSquare className="h-6 w-6 text-purple-400" />
-                    <h2 className="text-xl font-semibold text-white">Test Drive</h2>
+                    <h2 className="text-xl font-semibold bg-background">Test Drive</h2>
                   </div>
                   
                   <p className="text-gray-400 mb-4">
@@ -463,8 +462,8 @@ export default function SetupPage() {
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-4">
-                      <div className="bg-gray-800 rounded-lg p-4">
-                        <h3 className="text-white font-medium mb-3">Suggested Questions</h3>
+                      <div className=" rounded-lg p-4">
+                        <h3 className="bg-background font-medium mb-3">Suggested Questions</h3>
                         <ul className="space-y-2">
                           <li>
                             <Button 
@@ -505,8 +504,8 @@ export default function SetupPage() {
                         </ul>
                       </div>
                       
-                      <div className="bg-gray-800 rounded-lg p-4">
-                        <h3 className="text-white font-medium mb-3">Test Features</h3>
+                      <div className=" rounded-lg p-4">
+                        <h3 className="bg-background font-medium mb-3">Test Features</h3>
                         <ul className="space-y-2">
                           <li>
                             <Button 
@@ -535,10 +534,10 @@ export default function SetupPage() {
                       </div>
                     </div>
                     
-                    <div className="bg-gray-800 rounded-lg flex flex-col h-[400px]">
+                    <div className=" rounded-lg flex flex-col h-[400px]">
                       <div className="p-3 border-b border-gray-700 flex items-center">
                         <MessageSquare className="h-5 w-5 text-purple-400 mr-2" />
-                        <span className="text-white font-medium">Chat Simulation</span>
+                        <span className="bg-background font-medium">Chat Simulation</span>
                       </div>
                       
                       <div className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -556,8 +555,8 @@ export default function SetupPage() {
                               <div 
                                 className={`max-w-[80%] rounded-lg p-3 ${
                                   response.type === "user" 
-                                    ? "bg-purple-600 text-white" 
-                                    : "bg-gray-700 text-gray-200"
+                                    ? "bg-purple-600 bg-background" 
+                                    : ""
                                 }`}
                               >
                                 {response.message}
@@ -594,7 +593,7 @@ export default function SetupPage() {
                                 handleTestQuery()
                               }
                             }}
-                            className="bg-gray-700 border-gray-600"
+                            className=" border-gray-600"
                           />
                           <Button 
                             size="icon" 
@@ -615,7 +614,7 @@ export default function SetupPage() {
                   variant="outline"
                   onClick={handleBack}
                   disabled={currentStep === 0}
-                  className="border-gray-700 text-gray-300 hover:bg-gray-800"
+                  className="border-gray-700 text-gray-300 hover:"
                 >
                   <ChevronLeft className="h-4 w-4 mr-2" />
                   Back

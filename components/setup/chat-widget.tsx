@@ -28,7 +28,7 @@ export function ChatWidget({ color, greeting, placement, showConfidence }: ChatW
         style={{ backgroundColor: color, [placement === "bottom-left" ? "left" : "right"]: "0", bottom: "0" }}
         onClick={toggleChat}
       >
-        {isOpen ? <X className="h-6 w-6 text-white" /> : <MessageSquare className="h-6 w-6 text-white" />}
+        {isOpen ? <X className="h-6 w-6 " /> : <MessageSquare className="h-6 w-6 " />}
       </Button>
 
       {/* Chat Window */}
@@ -39,7 +39,7 @@ export function ChatWidget({ color, greeting, placement, showConfidence }: ChatW
         >
           {/* Header */}
           <div
-            className="p-4 text-white font-medium flex items-center justify-between"
+            className="p-4  font-medium flex items-center justify-between"
             style={{ backgroundColor: color }}
           >
             <div className="flex items-center">
@@ -49,7 +49,7 @@ export function ChatWidget({ color, greeting, placement, showConfidence }: ChatW
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 text-white hover:bg-white/20 rounded-full"
+              className="h-8 w-8  hover:bg-white/20 rounded-full"
               onClick={toggleChat}
             >
               <X className="h-4 w-4" />
@@ -77,7 +77,7 @@ export function ChatWidget({ color, greeting, placement, showConfidence }: ChatW
                 style={{ focusRing: color }}
               />
               <button className="px-4 rounded-r-md flex items-center justify-center" style={{ backgroundColor: color }}>
-                <Send className="h-4 w-4 text-white" />
+                <Send className="h-4 w-4 " />
               </button>
             </div>
           </div>

@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 export default function AuthPage() {
   const router = useRouter()
@@ -44,11 +45,14 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-950 p-4">
+    <div className="min-h-screen flex items-center justify-center  p-4 relative">
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link href="/" className="inline-block">
-            <h1 className="font-bold text-3xl text-white">SupportAI</h1>
+            <h1 className="font-bold text-3xl ">SupportAI</h1>
           </Link>
           <p className="text-gray-400 mt-2">Automate customer support in minutes</p>
         </div>
@@ -60,9 +64,9 @@ export default function AuthPage() {
           </TabsList>
 
           <TabsContent value="login">
-            <Card className="bg-gray-900 border-gray-800">
+            <Card >
               <CardHeader>
-                <CardTitle className="text-white">Welcome back</CardTitle>
+                <CardTitle >Welcome back</CardTitle>
                 <CardDescription>Enter your credentials to access your account</CardDescription>
               </CardHeader>
               <form onSubmit={handleLogin}>
@@ -75,7 +79,7 @@ export default function AuthPage() {
                       value={loginEmail}
                       onChange={(e) => setLoginEmail(e.target.value)}
                       required
-                      className="bg-gray-800 border-gray-700"
+                      className=""
                     />
                   </div>
                   <div className="space-y-2">
@@ -91,7 +95,7 @@ export default function AuthPage() {
                       value={loginPassword}
                       onChange={(e) => setLoginPassword(e.target.value)}
                       required
-                      className="bg-gray-800 border-gray-700"
+                      className=""
                     />
                   </div>
                 </CardContent>
@@ -105,9 +109,9 @@ export default function AuthPage() {
           </TabsContent>
 
           <TabsContent value="signup">
-            <Card className="bg-gray-900 border-gray-800">
+            <Card className="bg-background border-border">
               <CardHeader>
-                <CardTitle className="text-white">Create an account</CardTitle>
+                <CardTitle className="">Create an account</CardTitle>
                 <CardDescription>Enter your information to get started</CardDescription>
               </CardHeader>
               <form onSubmit={handleSignup}>
@@ -119,7 +123,7 @@ export default function AuthPage() {
                       value={signupName}
                       onChange={(e) => setSignupName(e.target.value)}
                       required
-                      className="bg-gray-800 border-gray-700"
+                      className="bg-card border-gray-700"
                     />
                   </div>
                   <div className="space-y-2">
@@ -130,7 +134,7 @@ export default function AuthPage() {
                       value={signupEmail}
                       onChange={(e) => setSignupEmail(e.target.value)}
                       required
-                      className="bg-gray-800 border-gray-700"
+                      className="bg-card border-gray-700"
                     />
                   </div>
                   <div className="space-y-2">
@@ -141,7 +145,7 @@ export default function AuthPage() {
                       value={signupPassword}
                       onChange={(e) => setSignupPassword(e.target.value)}
                       required
-                      className="bg-gray-800 border-gray-700"
+                      className="bg-card border-gray-700"
                     />
                   </div>
                   <div className="space-y-2">
@@ -152,7 +156,7 @@ export default function AuthPage() {
                       value={signupConfirmPassword}
                       onChange={(e) => setSignupConfirmPassword(e.target.value)}
                       required
-                      className="bg-gray-800 border-gray-700"
+                      className="bg-card border-gray-700"
                     />
                   </div>
                   <div className="text-sm text-gray-400">
