@@ -3,7 +3,7 @@
 **Automate Customer Support in 5 Minutes with AI Power**  
 _24/7 instant responses • No coding required • Multi-channel support_
 
-![SupportAI Mockup](https://via.placeholder.com/1280x600.png?text=SupportAI+Interface+Showcase)
+
 
 ## 🌟 Features
 
@@ -174,3 +174,10 @@ We welcome contributions! Please follow these steps:
 MIT License - See [LICENSE](LICENSE) for details
 
 ---
+
+![1](https://github.com/user-attachments/assets/27a7666b-ffeb-4507-959b-a72e4c75397e)
+![2](https://github.com/user-attachments/assets/213093bf-0fb5-4d51-91de-760a1df760d3)
+![3](https://github.com/user-attachments/assets/9e5c30eb-883b-4785-905a-059b455f3adf)
+![4](https://github.com/user-attachments/assets/ae303d7f-9b52-4773-808f-5e7ceffbe1e7)
+
+
