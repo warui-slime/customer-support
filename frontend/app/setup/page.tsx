@@ -92,46 +92,81 @@ export default function SetupPage() {
     setUploadedFiles((prev) => prev.filter((_, i) => i !== index))
   }
 
-  const handleTestQuery = () => {
-    if (!testQuery.trim()) return
+  // const handleTestQuery = () => {
+  //   if (!testQuery.trim()) return
 
-    // Add user message
-    setTestResponses((prev) => [...prev, { message: testQuery, type: "user" }])
+  //   // Add user message
+  //   setTestResponses((prev) => [...prev, { message: testQuery, type: "user" }])
 
-    // Simulate AI response based on query
-    setTimeout(() => {
-      let response = ""
-      let confidence = 0
+  //   // Simulate AI response based on query
+  //   setTimeout(() => {
+  //     let response = ""
+  //     let confidence = 0
 
-      if (testQuery.toLowerCase().includes("return")) {
-        response =
-          "Our return policy allows returns within 30 days of purchase with a receipt. Items must be unused and in original packaging."
-        confidence = 95
-      } else if (testQuery.toLowerCase().includes("hour")) {
-        response = "Our business hours are Monday-Friday 9am-6pm, Saturday 10am-4pm, and we're closed on Sundays."
-        confidence = 98
-      } else if (testQuery.toLowerCase().includes("order") || testQuery.toLowerCase().includes("delivery")) {
-        response =
-          "Orders typically ship within 1-2 business days. You can track your order using the tracking number sent to your email."
-        confidence = 92
-      } else {
-        response =
-          "I'm not sure I understand your question. Could you please rephrase or ask about our products, hours, or policies?"
-        confidence = 70
-      }
+  //     if (testQuery.toLowerCase().includes("return")) {
+  //       response =
+  //         "Our return policy allows returns within 30 days of purchase with a receipt. Items must be unused and in original packaging."
+  //       confidence = 95
+  //     } else if (testQuery.toLowerCase().includes("hour")) {
+  //       response = "Our business hours are Monday-Friday 9am-6pm, Saturday 10am-4pm, and we're closed on Sundays."
+  //       confidence = 98
+  //     } else if (testQuery.toLowerCase().includes("order") || testQuery.toLowerCase().includes("delivery")) {
+  //       response =
+  //         "Orders typically ship within 1-2 business days. You can track your order using the tracking number sent to your email."
+  //       confidence = 92
+  //     } else {
+  //       response =
+  //         "I'm not sure I understand your question. Could you please rephrase or ask about our products, hours, or policies?"
+  //       confidence = 70
+  //     }
 
+  //     setTestResponses((prev) => [
+  //       ...prev,
+  //       {
+  //         message: response,
+  //         type: "bot",
+  //         confidence: confidence,
+  //       },
+  //     ])
+
+  //     setTestQuery("")
+  //   }, 1000)
+  // }
+  const handleTestQuery = async () => {
+    if (!testQuery.trim()) return;
+
+    const query = testQuery;
+    // add the user’s question
+    setTestResponses((prev) => [...prev, { message: query, type: "user" }]);
+    // clear the input immediately
+    setTestQuery("");
+
+    try {
+      const res = await fetch("https://takesnews.store/ask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query }),
+      });
+      if (!res.ok) throw new Error(`API error ${res.status}`);
+      const { response } = await res.json();
+
+      // add the bot’s answer from your API
+      setTestResponses((prev) => [
+        ...prev,
+        { message: response, type: "bot" },
+      ]);
+    } catch (err) {
+      console.error(err);
       setTestResponses((prev) => [
         ...prev,
         {
-          message: response,
+          message:
+            "Sorry, something went wrong — please try again later.",
           type: "bot",
-          confidence: confidence,
         },
-      ])
-
-      setTestQuery("")
-    }, 1000)
-  }
+      ]);
+    }
+  };
 
   const handleEscalation = () => {
     setTestResponses((prev) => [
@@ -147,36 +182,34 @@ export default function SetupPage() {
     <div className="min-h-screen ">
       <header className="container mx-auto py-6 px-4 flex justify-between items-center border-b border-gray-800">
         <div className="font-bold text-2xl bg-background">SupportAI</div>
-        <ThemeToggle/>
+        <ThemeToggle />
       </header>
-      
+
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
             <h1 className="text-3xl font-bold bg-background mb-2">Setup Wizard</h1>
             <p className="text-gray-400">Complete these steps to set up your automated customer support</p>
-            
+
             <Progress value={progress} className="mt-6 h-2 " />
-            
+
             <div className="hidden md:flex justify-between mt-4">
               {STEPS.map((step, index) => (
-                <div 
-                  key={step.id} 
-                  className={`flex flex-col items-center ${
-                    index === currentStep 
-                      ? "text-purple-400" 
-                      : index < currentStep 
-                        ? "text-green-500" 
+                <div
+                  key={step.id}
+                  className={`flex flex-col items-center ${index === currentStep
+                      ? "text-purple-400"
+                      : index < currentStep
+                        ? "text-green-500"
                         : "text-gray-500"
-                  }`}
+                    }`}
                 >
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center mb-2 ${
-                    index === currentStep 
-                      ? "bg-purple-600/20 text-purple-400 border border-purple-500" 
-                      : index < currentStep 
-                        ? "bg-green-600/20 text-green-500 border border-green-500" 
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center mb-2 ${index === currentStep
+                      ? "bg-purple-600/20 text-purple-400 border border-purple-500"
+                      : index < currentStep
+                        ? "bg-green-600/20 text-green-500 border border-green-500"
                         : " text-gray-500 border border-gray-700"
-                  }`}>
+                    }`}>
                     {index < currentStep ? <Check size={16} /> : index + 1}
                   </div>
                   <span className="text-xs text-center">{step.title}</span>
@@ -184,7 +217,7 @@ export default function SetupPage() {
               ))}
             </div>
           </div>
-          
+
           <Card className="bg-background border-gray-800 shadow-lg">
             <CardContent className="p-6">
               {/* Step 1: Business Profile */}
@@ -194,19 +227,19 @@ export default function SetupPage() {
                     <Building className="h-6 w-6 text-purple-400" />
                     <h2 className="text-xl font-semibold bg-background">Business Profile</h2>
                   </div>
-                  
+
                   <div className="space-y-4">
                     <div className="space-y-2">
                       <Label htmlFor="business-name">Business Name</Label>
-                      <Input 
-                        id="business-name" 
-                        placeholder="Acme Inc." 
+                      <Input
+                        id="business-name"
+                        placeholder="Acme Inc."
                         value={businessName}
                         onChange={(e) => setBusinessName(e.target.value)}
                         className=" border-gray-700"
                       />
                     </div>
-                    
+
                     <div className="space-y-2">
                       <Label htmlFor="industry">Industry</Label>
                       <Select value={industry} onValueChange={setIndustry}>
@@ -224,7 +257,7 @@ export default function SetupPage() {
                         </SelectContent>
                       </Select>
                     </div>
-                    
+
                     <div className="space-y-2">
                       <Label htmlFor="timezone">Timezone</Label>
                       <Select value={timezone} onValueChange={setTimezone}>
@@ -243,7 +276,7 @@ export default function SetupPage() {
                   </div>
                 </div>
               )}
-              
+
               {/* Step 2: Data Upload */}
               {currentStep === 1 && (
                 <div className="space-y-6">
@@ -251,18 +284,17 @@ export default function SetupPage() {
                     <Upload className="h-6 w-6 text-purple-400" />
                     <h2 className="text-xl font-semibold bg-background">Data Upload</h2>
                   </div>
-                  
+
                   <p className="text-gray-400 mb-4">
                     Upload your FAQs, product catalogs, and policies to train your AI assistant.
                   </p>
-                  
-                  <div 
-                    {...getRootProps()} 
-                    className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
-                      isDragActive 
-                        ? "border-purple-500 bg-purple-500/10" 
+
+                  <div
+                    {...getRootProps()}
+                    className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${isDragActive
+                        ? "border-purple-500 bg-purple-500/10"
                         : "border-gray-700 /50 hover:"
-                    }`}
+                      }`}
                   >
                     <input {...getInputProps()} />
                     <Upload className="h-12 w-12 text-gray-500 mx-auto mb-4" />
@@ -271,7 +303,7 @@ export default function SetupPage() {
                       Supports PDF, DOCX, TXT, CSV (Max 10MB per file)
                     </p>
                   </div>
-                  
+
                   {uploadedFiles.length > 0 && (
                     <div className="mt-6">
                       <h3 className="bg-background font-medium mb-3">Uploaded Files ({uploadedFiles.length})</h3>
@@ -285,9 +317,9 @@ export default function SetupPage() {
                                 <p className="text-gray-500 text-xs">{(file.size / 1024).toFixed(1)} KB</p>
                               </div>
                             </div>
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
+                            <Button
+                              variant="ghost"
+                              size="sm"
                               onClick={() => handleRemoveFile(index)}
                               className="text-gray-400 hover:bg-background"
                             >
@@ -300,7 +332,7 @@ export default function SetupPage() {
                   )}
                 </div>
               )}
-              
+
               {/* Step 3: Template Selection */}
               {currentStep === 2 && (
                 <div className="space-y-6">
@@ -308,11 +340,11 @@ export default function SetupPage() {
                     <FileText className="h-6 w-6 text-purple-400" />
                     <h2 className="text-xl font-semibold bg-background">Template Selection</h2>
                   </div>
-                  
+
                   <p className="text-gray-400 mb-4">
                     Choose an industry template to get started quickly. You can customize it later.
                   </p>
-                  
+
                   <RadioGroup value={selectedTemplate} onValueChange={setSelectedTemplate} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {[
                       { id: "restaurant", name: "Restaurant", description: "For cafes, restaurants, and food services" },
@@ -323,18 +355,17 @@ export default function SetupPage() {
                       { id: "nonprofit", name: "Nonprofit", description: "For charities and nonprofit organizations" },
                     ].map((template) => (
                       <div key={template.id} className="relative">
-                        <RadioGroupItem 
-                          value={template.id} 
-                          id={template.id} 
+                        <RadioGroupItem
+                          value={template.id}
+                          id={template.id}
                           className="sr-only"
                         />
                         <Label
                           htmlFor={template.id}
-                          className={`flex flex-col h-full p-4 rounded-lg border-2 cursor-pointer transition-all ${
-                            selectedTemplate === template.id
+                          className={`flex flex-col h-full p-4 rounded-lg border-2 cursor-pointer transition-all ${selectedTemplate === template.id
                               ? "border-purple-500 bg-purple-500/10"
                               : "border-gray-700  hover:bg-gray-750"
-                          }`}
+                            }`}
                         >
                           <span className="font-medium bg-background mb-1">{template.name}</span>
                           <span className="text-sm text-gray-400">{template.description}</span>
@@ -349,7 +380,7 @@ export default function SetupPage() {
                   </RadioGroup>
                 </div>
               )}
-              
+
               {/* Step 4: Widget Customization */}
               {currentStep === 3 && (
                 <div className="space-y-6">
@@ -357,39 +388,39 @@ export default function SetupPage() {
                     <Palette className="h-6 w-6 text-purple-400" />
                     <h2 className="text-xl font-semibold bg-background">Chat Widget Customization</h2>
                   </div>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-6">
                       <div className="space-y-2">
                         <Label htmlFor="widget-color">Widget Color</Label>
                         <div className="flex gap-3">
-                          <Input 
-                            id="widget-color" 
-                            type="color" 
+                          <Input
+                            id="widget-color"
+                            type="color"
                             value={widgetColor}
                             onChange={(e) => setWidgetColor(e.target.value)}
                             className="w-12 h-10 p-1  border-gray-700"
                           />
-                          <Input 
-                            type="text" 
+                          <Input
+                            type="text"
                             value={widgetColor}
                             onChange={(e) => setWidgetColor(e.target.value)}
                             className=" border-gray-700"
                           />
                         </div>
                       </div>
-                      
+
                       <div className="space-y-2">
                         <Label htmlFor="widget-greeting">Greeting Message</Label>
-                        <Textarea 
-                          id="widget-greeting" 
-                          placeholder="Hi! How can I help you today?" 
+                        <Textarea
+                          id="widget-greeting"
+                          placeholder="Hi! How can I help you today?"
                           value={widgetGreeting}
                           onChange={(e) => setWidgetGreeting(e.target.value)}
                           className=" border-gray-700 min-h-[100px]"
                         />
                       </div>
-                      
+
                       <div className="space-y-2">
                         <Label>Widget Placement</Label>
                         <RadioGroup value={widgetPlacement} onValueChange={setWidgetPlacement} className="grid grid-cols-2 gap-3">
@@ -397,11 +428,10 @@ export default function SetupPage() {
                             <RadioGroupItem value="bottom-right" id="bottom-right" className="sr-only" />
                             <Label
                               htmlFor="bottom-right"
-                              className={`flex items-center justify-center p-3 rounded-md border cursor-pointer transition-all ${
-                                widgetPlacement === "bottom-right"
+                              className={`flex items-center justify-center p-3 rounded-md border cursor-pointer transition-all ${widgetPlacement === "bottom-right"
                                   ? "border-purple-500 bg-purple-500/10"
                                   : "border-gray-700 "
-                              }`}
+                                }`}
                             >
                               Bottom Right
                             </Label>
@@ -410,32 +440,31 @@ export default function SetupPage() {
                             <RadioGroupItem value="bottom-left" id="bottom-left" className="sr-only" />
                             <Label
                               htmlFor="bottom-left"
-                              className={`flex items-center justify-center p-3 rounded-md border cursor-pointer transition-all ${
-                                widgetPlacement === "bottom-left"
+                              className={`flex items-center justify-center p-3 rounded-md border cursor-pointer transition-all ${widgetPlacement === "bottom-left"
                                   ? "border-purple-500 bg-purple-500/10"
                                   : "border-gray-700 "
-                              }`}
+                                }`}
                             >
                               Bottom Left
                             </Label>
                           </div>
                         </RadioGroup>
                       </div>
-                      
+
                       <div className="flex items-center justify-between">
                         <Label htmlFor="show-confidence" className="cursor-pointer">Show Confidence Tags</Label>
-                        <Switch 
-                          id="show-confidence" 
+                        <Switch
+                          id="show-confidence"
                           checked={showConfidence}
                           onCheckedChange={setShowConfidence}
                         />
                       </div>
                     </div>
-                    
+
                     <div className=" rounded-lg p-4 relative h-[400px] overflow-hidden outline">
                       <div className="absolute inset-0 flex items-center justify-center">
                         <div className="w-full max-w-[320px] h-full max-h-[500px] flex flex-col p-3">
-                          <ChatWidget 
+                          <ChatWidget
                             color={widgetColor}
                             greeting={widgetGreeting}
                             placement={widgetPlacement}
@@ -447,7 +476,7 @@ export default function SetupPage() {
                   </div>
                 </div>
               )}
-              
+
               {/* Step 5: Test Drive */}
               {currentStep === 4 && (
                 <div className="space-y-6">
@@ -455,19 +484,19 @@ export default function SetupPage() {
                     <MessageSquare className="h-6 w-6 text-purple-400" />
                     <h2 className="text-xl font-semibold bg-background">Test Drive</h2>
                   </div>
-                  
+
                   <p className="text-gray-400 mb-4">
                     Try asking questions to see how your AI assistant responds. This will help you understand how your customers will experience it.
                   </p>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-4">
                       <div className=" rounded-lg p-4">
                         <h3 className="bg-background font-medium mb-3">Suggested Questions</h3>
                         <ul className="space-y-2">
                           <li>
-                            <Button 
-                              variant="ghost" 
+                            <Button
+                              variant="ghost"
                               className="text-purple-400 hover:text-purple-300 hover:bg-purple-500/10 justify-start w-full"
                               onClick={() => {
                                 setTestQuery("What are your return policies?")
@@ -478,8 +507,8 @@ export default function SetupPage() {
                             </Button>
                           </li>
                           <li>
-                            <Button 
-                              variant="ghost" 
+                            <Button
+                              variant="ghost"
                               className="text-purple-400 hover:text-purple-300 hover:bg-purple-500/10 justify-start w-full"
                               onClick={() => {
                                 setTestQuery("What are your business hours?")
@@ -490,8 +519,8 @@ export default function SetupPage() {
                             </Button>
                           </li>
                           <li>
-                            <Button 
-                              variant="ghost" 
+                            <Button
+                              variant="ghost"
                               className="text-purple-400 hover:text-purple-300 hover:bg-purple-500/10 justify-start w-full"
                               onClick={() => {
                                 setTestQuery("How do I track my order?")
@@ -503,13 +532,13 @@ export default function SetupPage() {
                           </li>
                         </ul>
                       </div>
-                      
+
                       <div className=" rounded-lg p-4">
                         <h3 className="bg-background font-medium mb-3">Test Features</h3>
                         <ul className="space-y-2">
                           <li>
-                            <Button 
-                              variant="ghost" 
+                            <Button
+                              variant="ghost"
                               className="text-yellow-400 hover:text-yellow-300 hover:bg-yellow-500/10 justify-start w-full"
                               onClick={handleEscalation}
                             >
@@ -517,13 +546,13 @@ export default function SetupPage() {
                             </Button>
                           </li>
                           <li>
-                            <Button 
-                              variant="ghost" 
+                            <Button
+                              variant="ghost"
                               className="text-green-400 hover:text-green-300 hover:bg-green-500/10 justify-start w-full"
                               onClick={() => {
-                                setTestResponses(prev => [...prev, { 
-                                  message: "Was this helpful?", 
-                                  type: "bot" 
+                                setTestResponses(prev => [...prev, {
+                                  message: "Was this helpful?",
+                                  type: "bot"
                                 }])
                               }}
                             >
@@ -533,13 +562,13 @@ export default function SetupPage() {
                         </ul>
                       </div>
                     </div>
-                    
+
                     <div className=" rounded-lg flex flex-col h-[400px]">
                       <div className="p-3 border-b border-gray-700 flex items-center">
                         <MessageSquare className="h-5 w-5 text-purple-400 mr-2" />
                         <span className="bg-background font-medium">Chat Simulation</span>
                       </div>
-                      
+
                       <div className="flex-1 overflow-y-auto p-4 space-y-4">
                         {testResponses.length === 0 ? (
                           <div className="h-full flex flex-col items-center justify-center text-center text-gray-500">
@@ -548,16 +577,15 @@ export default function SetupPage() {
                           </div>
                         ) : (
                           testResponses.map((response, index) => (
-                            <div 
-                              key={index} 
+                            <div
+                              key={index}
                               className={`flex ${response.type === "user" ? "justify-end" : "justify-start"}`}
                             >
-                              <div 
-                                className={`max-w-[80%] rounded-lg p-3 ${
-                                  response.type === "user" 
-                                    ? "bg-purple-600 bg-background" 
+                              <div
+                                className={`max-w-[80%] rounded-lg p-3 ${response.type === "user"
+                                    ? "bg-purple-600 bg-background"
                                     : ""
-                                }`}
+                                  }`}
                               >
                                 {response.message}
                                 {response.type === "bot" && response.confidence && showConfidence && (
@@ -565,7 +593,7 @@ export default function SetupPage() {
                                     I'm {response.confidence}% sure this is correct!
                                   </div>
                                 )}
-                                
+
                                 {response.message === "Was this helpful?" && (
                                   <div className="mt-3 flex gap-2">
                                     <Button size="sm" variant="outline" className="h-8 px-2 text-green-400 border-green-500 hover:bg-green-500/10">
@@ -581,22 +609,24 @@ export default function SetupPage() {
                           ))
                         )}
                       </div>
-                      
+
                       <div className="p-3 border-t border-gray-700">
                         <div className="flex gap-2">
-                          <Input 
-                            placeholder="Type a message..." 
+                          <Input
+                            placeholder="Type a message..."
                             value={testQuery}
                             onChange={(e) => setTestQuery(e.target.value)}
                             onKeyDown={(e) => {
                               if (e.key === "Enter") {
                                 handleTestQuery()
+
+
                               }
                             }}
                             className=" border-gray-600"
                           />
-                          <Button 
-                            size="icon" 
+                          <Button
+                            size="icon"
                             onClick={handleTestQuery}
                             className="bg-purple-600 hover:bg-purple-700"
                           >
@@ -608,7 +638,7 @@ export default function SetupPage() {
                   </div>
                 </div>
               )}
-              
+
               <div className="flex justify-between mt-8">
                 <Button
                   variant="outline"
@@ -619,7 +649,7 @@ export default function SetupPage() {
                   <ChevronLeft className="h-4 w-4 mr-2" />
                   Back
                 </Button>
-                
+
                 <Button
                   onClick={handleNext}
                   className="bg-purple-600 hover:bg-purple-700"
@@ -641,6 +671,6 @@ export default function SetupPage() {
           </Card>
         </div>
       </main>
-  </div>
+    </div>
   )
 }
