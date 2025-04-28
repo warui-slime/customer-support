@@ -1,4 +1,3 @@
-```markdown
 # SupportAI 🤖✨
 
 **Automate Customer Support in 5 Minutes with AI Power**  
@@ -18,6 +17,7 @@ _24/7 instant responses • No coding required • Multi-channel support_
 
 ## 📁 Project Structure
 
+```markdown
 ```bash
 supportai/
 ├── frontend/                 # Next.js 14 Application
